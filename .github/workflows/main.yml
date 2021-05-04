@@ -36,12 +36,12 @@ jobs:
           echo test, and deploy your project.
           
           directory
-          root_dir: # optional
+          # root_dir: # optional
           # Specify whether the Codecov output should be verbose
-          verbose: # optional
+          verbose: true
           # Directory in which to execute codecov.sh
-          working-directory: # optional
+          # working-directory: # optional
           # Custom Derived Data Path for Coverage.profdata and gcov processing
-          xcode_derived_data: # optional
+          # xcode_derived_data: # optional
           # Specify packages to build coverage. Uploader will only build these packages
-          xcode_package: # optional
+          # xcode_package: # optional
