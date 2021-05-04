@@ -35,10 +35,10 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
           
-          directory
+          # directory
           # root_dir: # optional
           # Specify whether the Codecov output should be verbose
-          verbose: true
+          # verbose: true
           # Directory in which to execute codecov.sh
           # working-directory: # optional
           # Custom Derived Data Path for Coverage.profdata and gcov processing
