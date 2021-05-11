@@ -5,8 +5,8 @@ name: tag-rc
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
+  #push:
+    #branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,16 +24,30 @@ jobs:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      #- name: Run a one-line script
+        #run: echo Hello, world!
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Tag release candidate
         run: |
-          # config
-          with_v=true
-          # get latest tag
-          git checkout master
-          git pull
-          old_tag=$(git tag --sort=-creatordate | head -n 1)
-          echo ::tag before latest check: $old_tag
+         git checkout master
+         git pull
+         old_tag=$(git tag --sort=-creatordate | head -n 1)
+         echo tag before latest check: $old_tag
+
+         # get commit hash from latest tag
+         tag_commit=$(git rev-list -n 1 $old_tag)
+
+         # get current commit hash for tag
+         commit=$(git rev-parse HEAD)
+         if [ "$tag_commit" == "$commit" ]; then
+             echo "No new commits since previous tag. Skipping..."
+             exit 0
+         fi
+         
+         date=$(date +%y%m%d-%H%M%S)
+         tagname="${date}-rc"
+         echo tagging release as ${tagname}
+         git tag ${tagname}
+         git push origin ${tagname}
+         echo "done"
