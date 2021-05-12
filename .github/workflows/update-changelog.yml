@@ -1,4 +1,4 @@
-name: create-prerelease
+name: update-changelog
 on:
   workflow_dispatch:
 jobs:
@@ -10,6 +10,6 @@ jobs:
         with:
           node-version: 12
       - run: npm install @octokit/action
-      - run: node .github/actions/prerelease.js
+      - run: node .github/actions/changelog.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
