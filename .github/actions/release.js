@@ -8,6 +8,15 @@ async function run() {
     repo: 'test-gha',
   })
 
+  console.log({releases})
+
+  const tags = await octokit.request('GET /repos/{owner}/{repo}/tags', {
+    owner: 'octocat',
+    repo: 'hello-world'
+  })
+
+  console.log({tags})
+  
   if (releases == null) {
     throw new Error('No releases found!')
   }

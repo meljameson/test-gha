@@ -6,7 +6,7 @@ async function run() {
   await octokit.request('POST /repos/{owner}/{repo}/releases', {
     owner: 'meljameson',
     repo: 'test-gha',
-    tag_name: 'v0',
+    tag_name: 'v0-prelease',
     prerelease: true,
     body: `
     * helloooooo
