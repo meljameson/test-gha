@@ -3,6 +3,7 @@ const { Octokit } = require("@octokit/action")
 const octokit = new Octokit()
 
 async function run() {
+  // get a list of releases
   const response = await octokit.request('GET /repos/{owner}/{repo}/releases', {
     owner: 'meljameson',
     repo: 'test-gha',
@@ -12,11 +13,14 @@ async function run() {
     throw new Error(`Unable to get release data from GitHub. No response: ${response}`)
   }
 
+  // get the latest pre-release
   const releases = response.data
 
   if (releases == null) {
     throw new Error(`No releases found! releases: ${releases}`)
   }
+
+  const release = releases[0]
   
   if (release == null) {
     throw new Error(`Previous release not found! release: ${release}`)
