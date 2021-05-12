@@ -10,30 +10,30 @@ async function run() {
   })
   
   if (response == null) {
-    throw new Error(`Unable to get release data from GitHub. No response: ${response}`)
+    throw new Error(`Unable to get release data from GitHub. No response: ${JSON.stringify(response)}`)
   }
 
   // get the latest pre-release
   const releases = response.data
 
   if (releases == null) {
-    throw new Error(`No releases found! releases: ${releases}`)
+    throw new Error(`No releases found! releases: ${JSON.stringify(releases)}`)
   }
 
   const release = releases[0]
   
   if (release == null) {
-    throw new Error(`Previous release not found! release: ${release}`)
+    throw new Error(`Previous release not found! release: ${JSON.stringify(release)}`)
   }
 
   const { release_id, name, prerelease } = release
 
   if (release_id == null) {
-    throw new Error(`Previous release id not found! release: ${release}`)
+    throw new Error(`Previous release id not found! release: ${JSON.stringify(release)}`)
   }
 
   if (prerelease === false) {
-    throw new Error(`Previous release was not a pre-release. Only pre-releases can be upgraded to a release. release: ${release}`)
+    throw new Error(`Previous release was not a pre-release. Only pre-releases can be upgraded to a release. release: ${JSON.stringify(release)}`)
   }
 
   console.log(`Updating release ${name} (id: ${release_id}) to latest`)
