@@ -9,9 +9,9 @@ jobs:
     steps:
       # Check out code using git
       - uses: actions/checkout@v2
-      # Install Node 12
-      - uses: actions/setup-node@v1
-          version: 12
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 12
       - run: npm install @octokit/action
       - run: node .github/actions/create-pre-release.js
         env:
