@@ -35,7 +35,7 @@ function checkForChanges() {
   try {
     console.log(`Reverting to previous: ${revertTo}`)
     await execGitCmd(`git checkout HEAD@{1}`)
-  } finally {
+  } catch(e) {} finally {
     const status = await execGitCmd(`git status`)
     console.log(status)
     const newHash = await execGitCmd(`git rev-parse HEAD`)
