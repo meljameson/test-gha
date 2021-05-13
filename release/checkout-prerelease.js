@@ -42,7 +42,7 @@ async function getLastPreRelease() {
 
 function execGitCmd(cmd) {
     return new Promise((resolve, reject) => {
-        console.log('\x1b[36m%s\x1b[0m', `"${cmd}" is executing...`);
+        console.log('\x1b[36m%s\x1b[0m', `'${cmd}' is executing...`);
         exec(cmd, function (error, stdout, stderr) {
             if (error) reject(error)
             if (stderr) reject(stderr)
@@ -68,7 +68,18 @@ function checkForChanges() {
     console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
     process.exit(1)
   }
-
+  
+  execGitCmd('git fetch')
   const latest = await getLastPreRelease();
-  console.log({latest})
+  if (latest == null) {
+    console.log('No latest prerelease to check out')
+    process.exit(1)
+  }
+  if (latest.prerelease === false) {
+    console.log('No pre-release found needing to be smoketested')
+    process.exit(1)
+  }
+
+  console.log(`Checking out latest prerelease: ${latest.tag_name} at ${latest.url}`)
+  // execGitCmd(`git checkout ${latest.tag_name}`)
 })()
