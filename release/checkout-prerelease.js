@@ -85,7 +85,8 @@
      // this will give a detached head error which isn't really an error for us
      await execGitCmd(`git checkout ${latest.tag_name}`)
    } finally {
-     await execGitCmd(`git status`)
+     const status = await execGitCmd(`git status`)
+     console.log(status)
      console.log('Done')
    }
  })()
