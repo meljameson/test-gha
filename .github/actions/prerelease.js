@@ -1,5 +1,5 @@
 /**
- * Create a release with prerelease: true in GitHub UI
+ * Create a pre-release 
  * 
  */
 const { Octokit } = require("@octokit/action");
@@ -8,7 +8,7 @@ const octokit = new Octokit();
 
 async function run() {
   const date = new Date();
-  const name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}-${date.getTime()}-alpha`
+  const name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}-${date.getTime()}-beta`
 
   await octokit.request('POST /repos/{owner}/{repo}/releases', {
     owner: 'meljameson',
@@ -21,11 +21,12 @@ async function run() {
     * testing\
     ",
   })
-  octokit.log.error(`Hellooooo`)
+  process.exit(1)
 }
 
 try {
   run()
 } catch(e) {
   octokit.log.error(e)
+  process.exit(1)
 }
