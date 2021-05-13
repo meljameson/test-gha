@@ -5,28 +5,39 @@
  * git checkout release
  */
 const { exec } = require('child_process')
-const { Octokit, App, Action } = require('octokit')
+const { Octokit } = require('octokit')
 
-function fetchRelease() {
+ async function getAllReleases() {
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-
-  // Compare: https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
-  // const {
-  //   data: { login },
-  // } = await octokit.users.getAuthenticated();
-  // console.log("Hello, %s", login);
-
-  // await octokit.request("POST /repos/{owner}/{repo}/issues", {
-  //   owner: "octocat",
-  //   repo: "hello-world",
-  //   title: "Hello, world!",
-  //   body: "I created this issue using Octokit!",
-  // });
-
-  return octokit.request('GET /repos/{owner}/{repo}/releases/latest', {
+  // get list of releases
+  const response = await octokit.request('GET /repos/{owner}/{repo}/releases', {
     owner: 'meljameson',
-    repo: 'test-gha'
+    repo: 'test-gha',
   })
+  
+  if (response == null) {
+    throw new Error(`Unable to get release data from GitHub. No response: ${JSON.stringify(response)}`)
+  }
+
+  return response.data
+}
+
+async function getLastPreRelease() {
+  // get the latest pre-release
+  const releases = await getAllReleases()
+
+  if (releases == null) {
+    throw new Error(`No releases found! releases: ${JSON.stringify(releases)}`)
+  }
+
+  // the last release is the first in the release list
+  const release = releases[0]
+  
+  if (release == null) {
+    throw new Error(`Previous release not found! release: ${JSON.stringify(release)}`)
+  }
+
+  return release
 }
 
 function execGitCmd(cmd) {
@@ -43,11 +54,13 @@ function execGitCmd(cmd) {
 async function run() {
   const prestash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
   console.log({prestash})
+  
   await execGitCmd('git stash')
+
   const poststash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
   console.log({poststash})
 
-  const latest = await fetchRelease();
+  const latest = await getLastPreRelease();
   console.log({latest})
 }
 
