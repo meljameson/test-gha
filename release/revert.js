@@ -39,7 +39,7 @@ function getDescription(head) {
   const [ description, oldCommit ] = await getDescription('HEAD@{1}');
   
   try {
-    console.log(`Checking out previous version: ${description}`)
+    console.log(`Checking out previous ${description}`)
     await execGitCmd(`git checkout HEAD@{1}`)
   } catch(e) {} finally {
     const [ description, newCommit ] = await getDescription('HEAD');
@@ -51,8 +51,7 @@ function getDescription(head) {
       process.exit(1)
     }
 
-    console.log(`Checkout to previous version ${oldCommit} completed successfully.`)
-    console.log(`On Commit ${newCommit}`)
+    console.log(`Checkout completed successfully.`)
     console.log(description)
   }
 })()
