@@ -84,9 +84,9 @@
    try {
      // this will give a detached head error which isn't really an error for us
      await execGitCmd(`git checkout ${latest.tag_name}`)
-   } finally {
+   } catch(e){} finally {
      const status = await execGitCmd(`git status`)
      console.log(status)
-     console.log('Done')
+     console.log('Pre-release is loaded and ready to test')
    }
  })()
