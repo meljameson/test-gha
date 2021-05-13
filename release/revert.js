@@ -40,9 +40,10 @@ function checkForChanges() {
     console.log(status)
     const newHash = await execGitCmd(`git rev-parse HEAD`)
     if (oldHash === newHash) {
-      console.log('Checkout to previous version complete')
+      console.log(`Checkout to previous version completed successfully. On Commit ${newHash}`)
     } else {
       console.error(`Checkout commit does not match current commit. old: ${oldHash} new: ${newHash}`)
+      process.exit(1)
     }
   }
 })()
