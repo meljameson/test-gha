@@ -33,16 +33,16 @@ function checkForChanges() {
   const revertTo = await execGitCmd(`git log HEAD@{1} -n 1`)
   const oldHash = await execGitCmd(`git rev-parse HEAD@{1}`)
   try {
-    console.log(`Reverting to previous: ${revertTo}`)
+    console.log(`Checking out previous version: ${revertTo}`)
     await execGitCmd(`git checkout HEAD@{1}`)
   } catch(e) {} finally {
     const status = await execGitCmd(`git status`)
     console.log(status)
     const newHash = await execGitCmd(`git rev-parse HEAD`)
     if (oldHash === newHash) {
-      console.log('Revert complete')
+      console.log('Checkout to previous version complete')
     } else {
-      console.error('Revert commit does not match current commit')
+      console.error(`Checkout commit does not match current commit. old: ${oldHash} new: ${newHash}`)
     }
   }
 })()
