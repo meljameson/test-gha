@@ -51,14 +51,23 @@ function execGitCmd(cmd) {
     })
 }
 
-(async function checkoutPrerelease() {
-  const prestash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
-  console.log({prestash})
-  
-  await execGitCmd('git stash')
+function checkForChanges() {
+  return execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
+}
 
-  const poststash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
-  console.log({poststash})
+(async function checkoutPrerelease() {
+  const changes = await checkForChanges()
+  if (changes) {
+    console.log(`Unsaved changes found: ${changes}`)
+    console.log('Stashing changes')
+    await execGitCmd('git stash -u')
+  }
+
+  const moreChanges = await checkForChanges()
+  if (moreChanges) {
+    console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
+    process.exit(1)
+  }
 
   const latest = await getLastPreRelease();
   console.log({latest})
