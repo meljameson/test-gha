@@ -81,5 +81,7 @@ function checkForChanges() {
   }
 
   console.log(`Checking out latest prerelease: ${latest.tag_name} at ${latest.url}`)
-  // execGitCmd(`git checkout ${latest.tag_name}`)
+  execGitCmd(`git checkout ${latest.tag_name}`)
+  execGitCmd(`git status`)
+  console.log('Done')
 })()
