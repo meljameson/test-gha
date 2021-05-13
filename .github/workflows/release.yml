@@ -1,4 +1,4 @@
-name: confirm-release
+name: release
 on:
   workflow_dispatch:
 jobs:

@@ -1,4 +1,4 @@
-name: create-prerelease
+name: prerelease
 on:
   workflow_dispatch:
 jobs:
