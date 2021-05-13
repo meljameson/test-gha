@@ -21,13 +21,14 @@ function checkForChanges() {
     console.log(`Unsaved changes found: ${changes}`)
     console.log('Stashing changes')
     await execGitCmd('git stash -u')
+
+    const moreChanges = await checkForChanges()
+    if (moreChanges) {
+      console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
+      process.exit(1)
+    }
   }
 
-  const moreChanges = await checkForChanges()
-  if (moreChanges) {
-    console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
-    process.exit(1)
-  }
   
   const revertTo = await execGitCmd(`git log HEAD@{1} -n 1`)
   const oldHash = await execGitCmd(`git rev-parse HEAD@{1}`)

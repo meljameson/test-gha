@@ -64,13 +64,14 @@
      console.log(`Unsaved changes found: ${changes}`)
      console.log('Stashing changes')
      await execGitCmd('git stash -u')
+
+     const moreChanges = await checkForChanges()
+     if (moreChanges) {
+       console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
+       process.exit(1)
+     }
    }
  
-   const moreChanges = await checkForChanges()
-   if (moreChanges) {
-     console.log(`More unsaved changes found: ${moreChanges}. Exiting for human help`)
-     process.exit(1)
-   }
  
    const latest = await getLastPreRelease();
    if (latest == null) {
