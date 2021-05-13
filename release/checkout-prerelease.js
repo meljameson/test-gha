@@ -51,7 +51,7 @@ function execGitCmd(cmd) {
     })
 }
 
-async function run() {
+(async function checkoutPrerelease() {
   const prestash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
   console.log({prestash})
   
@@ -62,6 +62,4 @@ async function run() {
 
   const latest = await getLastPreRelease();
   console.log({latest})
-}
-
-run()
+})()

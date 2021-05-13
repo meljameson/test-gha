@@ -5,7 +5,7 @@
  * git checkout release
  */
  const { exec } = require('child_process')
- const { Octokit, App, Action } = require('octokit')
+ const { Octokit } = require('octokit')
  
  function fetchRelease() {
    const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
@@ -26,7 +26,7 @@
      })
  }
  
- async function run() {
+ (async function checkoutRelease() {
    const prestash = await execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
    console.log({prestash})
    await execGitCmd('git stash')
@@ -35,6 +35,4 @@
  
    const latest = await fetchRelease();
    console.log({latest})
- }
- 
- run()
+ })()
