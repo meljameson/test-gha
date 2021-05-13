@@ -82,10 +82,10 @@
    await execGitCmd('git fetch')
    console.log(`Checking out latest prerelease: ${latest.tag_name} at ${latest.url}`)
    try {
+     // this will give a detached head error which isn't really an error for us
      await execGitCmd(`git checkout ${latest.tag_name}`)
-   } catch(e){
-     console.log(e)
+   } finally {
+     await execGitCmd(`git status`)
+     console.log('Done')
    }
-   await execGitCmd(`git status`)
-   console.log('Done')
  })()
