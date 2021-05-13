@@ -42,18 +42,17 @@ function getDescription(head) {
     console.log(`Checking out previous version: ${description}`)
     await execGitCmd(`git checkout HEAD@{1}`)
   } catch(e) {} finally {
-    const status = await execGitCmd(`git status`)
-    console.log(status)
     const [ description, newCommit ] = getDescription('HEAD');
-    if (oldCommit === newCommit) {
-      console.log(`Checkout to previous version ${oldCommit} completed successfully.`)
-      console.log(`On Commit ${newCommit}`)
-      console.log(description)
-    } else {
+    
+    if (oldCommit !== newCommit) {
       console.error(`Checkout commit does not match current commit.`)
       console.error(`old: ${oldCommit} new: ${newCommit}`)
       console.log(description)
       process.exit(1)
     }
+    
+    console.log(`Checkout to previous version ${oldCommit} completed successfully.`)
+    console.log(`On Commit ${newCommit}`)
+    console.log(description)
   }
 })()
