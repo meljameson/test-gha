@@ -39,13 +39,15 @@ function checkForChanges() {
     const status = await execGitCmd(`git status`)
     console.log(status)
     const newHash = await execGitCmd(`git rev-parse HEAD`)
+    const description = await execGitCmd(`git log HEAD@{1} -n 1`)
     if (oldHash === newHash) {
       console.log(`Checkout to previous version completed successfully.`)
       console.log(`On Commit ${newHash}`)
-      const description = await execGitCmd(`git log HEAD@{1} -n 1`)
       console.log(description)
     } else {
-      console.error(`Checkout commit does not match current commit. old: ${oldHash} new: ${newHash}`)
+      console.error(`Checkout commit does not match current commit.`)
+      console.error(`old: ${oldHash} new: ${newHash}`)
+      console.log(description)
       process.exit(1)
     }
   }
