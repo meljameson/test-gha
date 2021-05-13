@@ -69,7 +69,7 @@ function checkForChanges() {
     process.exit(1)
   }
   
-  execGitCmd('git fetch')
+  await execGitCmd('git fetch')
   const latest = await getLastPreRelease();
   if (latest == null) {
     console.log('No latest prerelease to check out')
@@ -81,7 +81,7 @@ function checkForChanges() {
   }
 
   console.log(`Checking out latest prerelease: ${latest.tag_name} at ${latest.url}`)
-  execGitCmd(`git checkout ${latest.tag_name}`)
-  execGitCmd(`git status`)
+  await execGitCmd(`git checkout ${latest.tag_name}`)
+  await execGitCmd(`git status`)
   console.log('Done')
 })()
