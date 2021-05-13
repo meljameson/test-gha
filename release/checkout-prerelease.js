@@ -4,6 +4,9 @@
  * stash
  * git checkout release
  */
+
+// TODO: replace console.logs with slack notifications
+
  const { exec } = require('child_process')
  const { Octokit } = require('octokit')
  
