@@ -1,13 +1,13 @@
 /**
- * Create a pre-release 
- * 
+ * Create a pre-release for smoke-testing viewable at:
+ * https://github.com/{owner}/{repo}/releases
  */
 const { Octokit } = require("@octokit/action");
 
 const octokit = new Octokit();
 
-async function run() {
-  const date = new Date();
+(async function createPrerelease() {
+try {  const date = new Date();
   const name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}-${date.getTime()}-beta`
 
   await octokit.request('POST /repos/{owner}/{repo}/releases', {
@@ -20,12 +20,8 @@ async function run() {
     * helloooooo\
     * testing\
     ",
-  })
-}
-
-try {
-  run()
-} catch(e) {
-  octokit.log.error(e)
-  process.exit(1)
-}
+  })} catch(e) {
+    octokit.log.error(e)
+    process.exit(1)
+  }
+})()

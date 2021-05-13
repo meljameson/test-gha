@@ -1,3 +1,10 @@
+/**
+ * Upgrades the last pre-release to a bonified release for other systems to upgrade to
+ * This is to be done after successful smoke-testing of a pre-release on a designated test system
+ * This is the equivalent of passing an integration test in CI
+ * Releases are viewable at: https://github.com/{owner}/{repo}/releases
+ */
+
 const { Octokit } = require('@octokit/action')
 
 const octokit = new Octokit()
@@ -23,25 +30,25 @@ async function getAllReleases() {
 /**
  * 
  * @returns {
-      url: string,
-      assets_url: string,
-      upload_url: string,
-      html_url: string,
-      id: number,
-      author: Object,
-      node_id: string,
-      tag_name: string,
-      target_commitish: string,
-      name: string,
-      draft: boolean,
-      prerelease: boolean,
-      created_at: string,
-      published_at: string,
-      assets: array,
-      tarball_url: string,
-      zipball_url: string,
-      body: string,
-    }
+ *    url: string,
+ *    assets_url: string,
+ *    upload_url: string,
+ *    html_url: string,
+ *    id: number,
+ *    author: Object,
+ *    node_id: string,
+ *    tag_name: string,
+ *    target_commitish: string,
+ *    name: string,
+ *    draft: boolean,
+ *    prerelease: boolean,
+ *    created_at: string,
+ *    published_at: string,
+ *    assets: array,
+ *    tarball_url: string,
+ *    zipball_url: string,
+ *    body: string,
+ * }
  */
 async function getLastPreRelease() {
   // get the latest pre-release
@@ -61,7 +68,8 @@ async function getLastPreRelease() {
   return release
 }
 
-async function run() {
+(async function updatePrereleaseToRelease() {
+  try {
   const { id, name, tag_name, prerelease } = await getLastPreRelease()
 
   if (id == null) {
@@ -81,6 +89,8 @@ async function run() {
     prerelease: false,
     tag_name: 'release'
   })
+} catch(e) {
+  octokit.log.error(e)
+  process.exit(1)
 }
-
-run()
+})()
