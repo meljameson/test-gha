@@ -21,7 +21,6 @@ async function run() {
     * testing\
     ",
   })
-  process.exit(1)
 }
 
 try {
