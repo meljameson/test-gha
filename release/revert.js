@@ -15,7 +15,7 @@ function checkForChanges() {
   return execGitCmd('git diff --name-only && git diff --name-only --staged | sort | uniq')
 }
 
-(async function checkoutPrerelease() {
+async function ensureCleanState() {
   const changes = await checkForChanges()
   if (changes) {
     console.log(`Unsaved changes found: ${changes}`)
@@ -28,25 +28,30 @@ function checkForChanges() {
       process.exit(1)
     }
   }
+}
 
+function getDescription(head) {
+  return Promise.all([execGitCmd(`git log ${head} -n 1`), execGitCmd(`git rev-parse ${head}`)])
+}
+
+(async function checkoutPrerelease() {
+  await ensureCleanState()
+  const [ description, oldCommit ] = getDescription('HEAD@{1}');
   
-  const revertTo = await execGitCmd(`git log HEAD@{1} -n 1`)
-  const oldHash = await execGitCmd(`git rev-parse HEAD@{1}`)
   try {
-    console.log(`Checking out previous version: ${revertTo}`)
+    console.log(`Checking out previous version: ${description}`)
     await execGitCmd(`git checkout HEAD@{1}`)
   } catch(e) {} finally {
     const status = await execGitCmd(`git status`)
     console.log(status)
-    const newHash = await execGitCmd(`git rev-parse HEAD`)
-    const description = await execGitCmd(`git log HEAD@{1} -n 1`)
-    if (oldHash === newHash) {
-      console.log(`Checkout to previous version completed successfully.`)
-      console.log(`On Commit ${newHash}`)
+    const [ description, newCommit ] = getDescription('HEAD');
+    if (oldCommit === newCommit) {
+      console.log(`Checkout to previous version ${oldCommit} completed successfully.`)
+      console.log(`On Commit ${newCommit}`)
       console.log(description)
     } else {
       console.error(`Checkout commit does not match current commit.`)
-      console.error(`old: ${oldHash} new: ${newHash}`)
+      console.error(`old: ${oldCommit} new: ${newCommit}`)
       console.log(description)
       process.exit(1)
     }
